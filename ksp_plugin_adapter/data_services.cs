@@ -118,6 +118,16 @@ namespace ksp_plugin_adapter {
         public static void SetSolarFlareEnabled(bool value) { Sun.Instance.sunFlare.enabled = value; }
 
         //
+        // Target selection
+        //
+        private static bool selecting_vessel = false;
+        private static bool selecting_celestial = false;
+        public static bool GetSelectingTargetVessel() { return selecting_vessel; }
+        public static void SetSelectingTargetVessel(bool value) { selecting_vessel = value; }
+        public static bool GetSelectingCelestial() { return selecting_celestial; }
+        public static void SetSelectingCelestial(bool value) { selecting_celestial = value; }
+
+        //
         // Reference frame settings
         //
         private static CelestialBody selected_celestial_body = FlightGlobals.GetHomeBody();

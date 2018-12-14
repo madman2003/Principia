@@ -71,9 +71,6 @@ public partial class PrincipiaPluginAdapter
 
   private MapNodePool map_node_pool_;
 
-  private bool selecting_active_vessel_target_ = false;
-  private bool selecting_target_celestial_ = false;
-
   private IntPtr plugin_ = IntPtr.Zero;
 
   // Whether to compress saves.
@@ -1536,9 +1533,9 @@ public partial class PrincipiaPluginAdapter
   private void OnCelestialNodeClick(KSP.UI.Screens.Mapview.MapNode node,
                                     Mouse.Buttons buttons) {
     if (buttons == Mouse.Buttons.Left) {
-      if (selecting_target_celestial_) {
+      if (DataServices.GetSelectingCelestial()) {
         FlightGlobals.fetch.SetVesselTarget(node.mapObject.celestialBody);
-        selecting_target_celestial_ = false;
+        DataServices.SetSelectingCelestial(false);
       } else if (PlanetariumCamera.fetch.target != node.mapObject) {
         PlanetariumCamera.fetch.SetTarget(node.mapObject);
       }
@@ -1547,9 +1544,9 @@ public partial class PrincipiaPluginAdapter
 
   private void OnVesselNodeClick(KSP.UI.Screens.Mapview.MapNode node,
                                  Mouse.Buttons buttons) {
-    if (selecting_active_vessel_target_) {
+    if (DataServices.GetSelectingTargetVessel()) {
       FlightGlobals.fetch.SetVesselTarget(node.mapObject.vessel);
-      selecting_active_vessel_target_ = false;
+      DataServices.SetSelectingTargetVessel(false);
     } else if (buttons == Mouse.Buttons.Left &&
                PlanetariumCamera.fetch.target != node.mapObject) {
       PlanetariumCamera.fetch.SetTarget(node.mapObject);
@@ -1561,7 +1558,7 @@ public partial class PrincipiaPluginAdapter
         !UnityEngine.EventSystems.EventSystem.current
              .IsPointerOverGameObject() &&
         Mouse.Left.GetClick() && !ManeuverGizmo.HasMouseFocus &&
-        !selecting_active_vessel_target_) {
+        !DataServices.GetSelectingTargetVessel()) {
       var ray = PlanetariumCamera.Camera.ScreenPointToRay(
           UnityEngine.Input.mousePosition);
       foreach (var celestial in FlightGlobals.Bodies) {
@@ -1570,9 +1567,9 @@ public partial class PrincipiaPluginAdapter
                            ScaledSpace.LocalToScaledSpace(celestial.position) -
                                ray.origin).magnitude;
         if (scaled_distance * ScaledSpace.ScaleFactor < celestial.Radius) {
-          if (selecting_target_celestial_) {
+          if (DataServices.GetSelectingCelestial()) {
             FlightGlobals.fetch.SetVesselTarget(celestial);
-            selecting_target_celestial_ = false;
+            DataServices.SetSelectingCelestial(false);
           } else if (PlanetariumCamera.fetch.target != celestial.MapObject) {
             PlanetariumCamera.fetch.SetTarget(celestial.MapObject);
           }

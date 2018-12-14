@@ -183,6 +183,14 @@ namespace ksp_plugin_adapter {
                 ),
                 new DialogGUIHorizontalLayout(
                     new DialogGUIToggle(DataServices.GetSolarFlareEnabled, "Enable system-star lens flare", DataServices.SetSolarFlareEnabled)
+                ),
+                // Target selection
+                new DialogGUIHorizontalLayout(TextAnchor.MiddleCenter,
+                    new DialogGUILabel("<color=#ffffffff>Target selection</color>")
+                ),
+                new DialogGUIHorizontalLayout(true, false, 0, new RectOffset(), TextAnchor.MiddleCenter,
+                    new DialogGUIButton("Select target vessel", () => { DataServices.SetSelectingTargetVessel(!DataServices.GetSelectingTargetVessel()); }, button_width, button_height, false),
+                    new DialogGUIButton("Select celestial", () => { DataServices.SetSelectingCelestial(!DataServices.GetSelectingCelestial()); }, button_width, button_height, false)
                 )
             );
         }
